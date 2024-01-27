@@ -1,0 +1,26 @@
+[
+  {
+    "cnpj": "54645648668",
+    "dataAtualizacao": "2024-01-24T23:34:07.318Z[UTC]",
+    "dataCriacao": "2024-01-24T23:34:07.318Z[UTC]",
+    "id": 2,
+    "nome": "Tec Info",
+    "proprietario": "Idelvan"
+  },
+  {
+    "cnpj": "5686785878854",
+    "dataAtualizacao": "2024-01-24T23:34:36.149Z[UTC]",
+    "dataCriacao": "2024-01-24T23:34:36.149Z[UTC]",
+    "id": 3,
+    "nome": "Tec Life",
+    "proprietario": "Marta"
+  },
+  {
+    "cnpj": "45489748945",
+    "dataAtualizacao": "2024-01-24T23:35:09.343Z[UTC]",
+    "dataCriacao": "2024-01-24T23:35:09.343Z[UTC]",
+    "id": 4,
+    "nome": "Tec Joias",
+    "proprietario": "Marhia"
+  }
+]
