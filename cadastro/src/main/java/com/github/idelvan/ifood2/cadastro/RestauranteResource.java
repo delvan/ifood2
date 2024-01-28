@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.github.idelvan.ifood2.cadastro.dto.AdicionarPratoDTO;
@@ -13,6 +16,7 @@ import com.github.idelvan.ifood2.cadastro.dto.AtualizarRestauranteDTO;
 import com.github.idelvan.ifood2.cadastro.dto.PratoMapper;
 import com.github.idelvan.ifood2.cadastro.dto.RestauranteDTO;
 import com.github.idelvan.ifood2.cadastro.dto.RestauranteMapper;
+import com.github.idelvan.ifood2.cadastro.infra.ConstraintViolationResponse;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -51,6 +55,9 @@ public class RestauranteResource {
 
     @POST
     @Transactional
+    @APIResponse(responseCode = "400", content = 
+    @Content(schema = @Schema(allOf = ConstraintViolationResponse.class)))
+    @APIResponse(responseCode = "201", description ="Caso restaurante seja cadastrado com sucesso")
     public Response adicionar(@Valid AdicionarRestauranteDTO dto) {
         Restaurante restaurante = restauranteMapper.toRestaurante(dto);
         restaurante.persist();
