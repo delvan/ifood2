@@ -2,14 +2,21 @@ package com.github.idelvan.ifood2.cadastro;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import com.github.idelvan.ifood2.cadastro.dto.AdicionarPratoDTO;
 import com.github.idelvan.ifood2.cadastro.dto.AdicionarRestauranteDTO;
+import com.github.idelvan.ifood2.cadastro.dto.AtualizarRestauranteDTO;
+import com.github.idelvan.ifood2.cadastro.dto.PratoMapper;
+import com.github.idelvan.ifood2.cadastro.dto.RestauranteDTO;
 import com.github.idelvan.ifood2.cadastro.dto.RestauranteMapper;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -32,14 +39,19 @@ public class RestauranteResource {
     @Inject
     RestauranteMapper restauranteMapper;
 
+    @Inject
+    PratoMapper pratoMapper;
+
     @GET
-    public List<Restaurante> ListarRestaurante() {
-        return Restaurante.listAll();
+    public List<RestauranteDTO> buscar() {
+        Stream<Restaurante> restaurantes = Restaurante.streamAll();
+        return restaurantes.map(r -> restauranteMapper.toRestauranteDTO(r))
+                .collect(Collectors.toList());
     }
 
     @POST
     @Transactional
-    public Response adicionar(AdicionarRestauranteDTO dto) {
+    public Response adicionar(@Valid AdicionarRestauranteDTO dto) {
         Restaurante restaurante = restauranteMapper.toRestaurante(dto);
         restaurante.persist();
         return Response.status(Status.CREATED).build();
@@ -48,7 +60,7 @@ public class RestauranteResource {
     @PUT
     @Path("{id}")
     @Transactional
-    public void atualizar(@PathParam("id") Long id, Restaurante dto) {
+    public void atualizar(@PathParam("id") Long id, AtualizarRestauranteDTO dto) {
         Optional<Restaurante> restOptional = Restaurante.findByIdOptional(id);
 
         if (restOptional.isEmpty()) {
@@ -57,7 +69,7 @@ public class RestauranteResource {
 
         Restaurante atualRestaurante = restOptional.get();
 
-        atualRestaurante.nome = dto.nome;
+        restauranteMapper.toRestaurante(dto, atualRestaurante);
 
         atualRestaurante.persist();
 
@@ -97,7 +109,7 @@ public class RestauranteResource {
     @Path("{idRestaurante}/pratos")
     @Transactional
     @Tag(name = "Prato")
-    public Response adicionar(@PathParam("idRestaurante") Long idRestaurante, Prato dto) {
+    public Response adicionar(@PathParam("idRestaurante") Long idRestaurante, AdicionarPratoDTO dto) {
 
         Optional<Restaurante> optRestaurante = Restaurante.findByIdOptional(idRestaurante);
 
@@ -105,13 +117,8 @@ public class RestauranteResource {
             throw new NotFoundException("Restaurante não existe");
         }
 
-        Prato prato = new Prato();
-
-        prato.nome = dto.nome;
-        prato.preco = dto.preco;
-        prato.descricao = dto.descricao;
+        Prato prato = pratoMapper.toPratoDTO(dto);
         prato.restaurante = optRestaurante.get();
-
         prato.persist();
 
         return Response.status(Status.CREATED).build();

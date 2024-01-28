@@ -1,13 +1,9 @@
 package com.github.idelvan.ifood2.cadastro.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class AdicionarRestauranteDTO {
+public class RestauranteDTO {
 
-    @NotEmpty
-    @NotNull
     public String proprietario;
 
     public String cnpj;
@@ -15,6 +11,7 @@ public class AdicionarRestauranteDTO {
     @Size(min = 3, max = 30)
     public String nomeFantasia;
 
+    public String dataCriacao;
+
     public LocalizacaoDTO localizacao;
-    
 }
